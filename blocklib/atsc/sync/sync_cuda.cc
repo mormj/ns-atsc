@@ -178,7 +178,7 @@ work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
                                         cudaMemcpyHostToDevice,
                                         d_stream));
 
-        cudaStreamSynchronize(d_stream);
+        checkCudaErrors(cudaStreamSynchronize(d_stream));
         // cudaDeviceSynchronize();
 
 
@@ -237,24 +237,24 @@ work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
                     ((OUTPUT_MULTIPLE - 1) * ATSC_DATA_SEGMENT_LENGTH + idx_start),
                 cudaMemcpyDeviceToDevice,
                 d_stream));
-            cudaStreamSynchronize(d_stream);
+            // cudaStreamSynchronize(d_stream);
             // memcpy(&out[no * ATSC_DATA_SEGMENT_LENGTH],
             //        d_data_mem,
             //        OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
             checkCudaErrors(cudaMemcpyAsync(&out[no * ATSC_DATA_SEGMENT_LENGTH],
                    d_data_mem,
                    OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(float),
-                cudaMemcpyDeviceToHost,
+                cudaMemcpyDeviceToHost, //Device,
                 d_stream));
-            cudaStreamSynchronize(d_stream);
-            
+            // cudaStreamSynchronize(d_stream);
+
             checkCudaErrors(cudaMemcpyAsync(
                 d_data_mem,
                 d_dev_out + ATSC_DATA_SEGMENT_LENGTH * (OUTPUT_MULTIPLE - 1) + idx_start,
                 sizeof(float) * (ATSC_DATA_SEGMENT_LENGTH - idx_start),
                 cudaMemcpyDeviceToDevice,
                 d_stream));
-            cudaStreamSynchronize(d_stream);
+            // cudaStreamSynchronize(d_stream);
 
 
             // std::cout << "   " << in[d_si_start] << " " << out[no] << " " << d_mu << " " << d_timing_adjust << " " << idx_start << std::endl;
@@ -263,6 +263,7 @@ work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
             
         }
     }
+    cudaStreamSynchronize(d_stream);
     consume_each(d_si, work_input);
     produce_each(no, work_output);
     return work_return_code_t::WORK_OK;
