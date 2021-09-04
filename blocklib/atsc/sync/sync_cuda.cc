@@ -52,10 +52,10 @@ sync_cuda::sync_cuda(const block_args& args)
     checkCudaErrors(cudaMalloc((void**)&d_dev_params, 6 * sizeof(float)));
     checkCudaErrors(cudaMallocHost((void**)&d_host_params, 6 * sizeof(float)));
 
-    // checkCudaErrors(cudaMalloc(
-    //     (void**)&d_data_mem, OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(float)));
-    checkCudaErrors(cudaMallocHost(
+    checkCudaErrors(cudaMalloc(
         (void**)&d_data_mem, OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(float)));
+    // checkCudaErrors(cudaMallocHost(
+    //     (void**)&d_data_mem, OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(float)));
 
     // Copy the interpolation filter taps into device memory
     checkCudaErrors(
@@ -94,12 +94,12 @@ void sync_cuda::reset()
 
     d_sr = 0;
 
-    memset(d_data_mem,
-           0,
-           OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH *
-               sizeof(*d_data_mem)); // (float)0 = 0x00000000
-    // checkCudaErrors(cudaMemset(
-    //     d_data_mem, 0, OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(*d_data_mem)));
+    // memset(d_data_mem,
+    //        0,
+    //        OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH *
+    //            sizeof(*d_data_mem)); // (float)0 = 0x00000000
+    checkCudaErrors(cudaMemset(
+        d_data_mem, 0, OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(*d_data_mem)));
     checkCudaErrors(
         cudaMemset(d_dev_integrator_accum, SSI_MIN, ATSC_DATA_SEGMENT_LENGTH));
 }
@@ -235,18 +235,24 @@ work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
                 d_dev_out,
                 sizeof(float) *
                     ((OUTPUT_MULTIPLE - 1) * ATSC_DATA_SEGMENT_LENGTH + idx_start),
+                cudaMemcpyDeviceToDevice,
+                d_stream));
+            cudaStreamSynchronize(d_stream);
+            // memcpy(&out[no * ATSC_DATA_SEGMENT_LENGTH],
+            //        d_data_mem,
+            //        OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
+            checkCudaErrors(cudaMemcpyAsync(&out[no * ATSC_DATA_SEGMENT_LENGTH],
+                   d_data_mem,
+                   OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(float),
                 cudaMemcpyDeviceToHost,
                 d_stream));
             cudaStreamSynchronize(d_stream);
-            memcpy(&out[no * ATSC_DATA_SEGMENT_LENGTH],
-                   d_data_mem,
-                   OUTPUT_MULTIPLE * ATSC_DATA_SEGMENT_LENGTH * sizeof(float));
-
+            
             checkCudaErrors(cudaMemcpyAsync(
                 d_data_mem,
                 d_dev_out + ATSC_DATA_SEGMENT_LENGTH * (OUTPUT_MULTIPLE - 1) + idx_start,
                 sizeof(float) * (ATSC_DATA_SEGMENT_LENGTH - idx_start),
-                cudaMemcpyDeviceToHost,
+                cudaMemcpyDeviceToDevice,
                 d_stream));
             cudaStreamSynchronize(d_stream);
 
