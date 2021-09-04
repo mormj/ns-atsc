@@ -3,10 +3,10 @@ yml_file = 'sync.yml'
 sync_files = files(['sync_cpu.cc'])
 
 
-# if cuda_dep.found() and get_option('enable_cuda')
-#     sync_files += files('sync_cuda.cc')
-#     atsc_cu_sources += files('sync_cuda.cu')
-# endif
+if USE_CUDA
+    sync_files += files('sync_cuda.cc')
+    atsc_cu_sources += files('sync.cu')
+endif
 
 gen_sync_h = custom_target('gen_sync_cpu_h',
                         input : ['sync.yml'],
