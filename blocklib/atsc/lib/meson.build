@@ -12,7 +12,7 @@ atsc_sources += [
 # This is ugly, and there HAS to be a better way to bring in dependencies
 link_args = ['-lnewsched-pmt','-lnewsched-runtime','-lnewsched-blocklib-filter','-lnewsched-blocklib-math','-lnewsched-blocklib-fec']
 block_cpp_args = ['-DHAVE_CPU']
-if false #USE_CUDA
+if USE_CUDA
      block_cpp_args += '-DHAVE_CUDA'
 
     newsched_blocklib_atsc_cu = library('newsched-blocklib-atsc-cu', 

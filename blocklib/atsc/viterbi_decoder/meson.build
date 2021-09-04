@@ -3,10 +3,10 @@ yml_file = 'atsc_viterbi_decoder.yml'
 viterbi_decoder_files = files(['viterbi_decoder_cpu.cc'])
 
 
-# if cuda_dep.found() and get_option('enable_cuda')
-#     viterbi_decoder_files += files('viterbi_decoder_cuda.cc')
-#     atsc_cu_sources += files('viterbi_decoder_cuda.cu')
-# endif
+if USE_CUDA
+    viterbi_decoder_files += files('viterbi_decoder_cuda.cc')
+    atsc_cu_sources += files('viterbi_decoder.cu')
+endif
 
 gen_viterbi_decoder_h = custom_target('gen_viterbi_decoder_cpu_h',
                         input : ['viterbi_decoder.yml'],
