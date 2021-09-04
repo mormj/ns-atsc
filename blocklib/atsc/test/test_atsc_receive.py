@@ -40,7 +40,7 @@ def main():
     fg.connect(is2c, 0, fpll, 0)
     fg.connect(fpll, 0, dcb, 0)
     fg.connect(dcb, 0, agc, 0)
-    fg.connect(agc, 0, sync, 0) #.set_custom_buffer(gr.buffer_cuda_properties.make(gr.buffer_cuda_type.H2D))
+    fg.connect(agc, 0, sync, 0).set_custom_buffer(gr.buffer_cuda_properties.make(gr.buffer_cuda_type.H2D))
     
     fg.connect(sync, 0, fschk, 0) #.set_custom_buffer(gr.buffer_cuda_properties.make(gr.buffer_cuda_type.D2H))
     fg.connect(fschk, 0, eq, 0)

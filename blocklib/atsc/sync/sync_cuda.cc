@@ -32,15 +32,15 @@ sync_cuda::sync_cuda(const block_args& args)
     : sync(args), d_rx_clock_to_symbol_freq(args.rate / ATSC_SYMBOL_RATE), d_si(0)
 {
 
-    checkCudaErrors(cudaMalloc(
-        (void**)&d_dev_in,
-        1500 + OUTPUT_MULTIPLE * sizeof(float) *
-                   (int)(ATSC_DATA_SEGMENT_LENGTH * d_rx_clock_to_symbol_freq)));
+    // checkCudaErrors(cudaMalloc(
+    //     (void**)&d_dev_in,
+    //     1500 + OUTPUT_MULTIPLE * sizeof(float) *
+    //                (int)(ATSC_DATA_SEGMENT_LENGTH * d_rx_clock_to_symbol_freq)));
 
-    checkCudaErrors(cudaMallocHost(
-        (void**)&d_host_in,
-        1500 + OUTPUT_MULTIPLE * sizeof(float) *
-                   (int)(ATSC_DATA_SEGMENT_LENGTH * d_rx_clock_to_symbol_freq)));
+    // checkCudaErrors(cudaMallocHost(
+    //     (void**)&d_host_in,
+    //     1500 + OUTPUT_MULTIPLE * sizeof(float) *
+    //                (int)(ATSC_DATA_SEGMENT_LENGTH * d_rx_clock_to_symbol_freq)));
 
     checkCudaErrors(cudaMalloc(
         (void**)&d_dev_out, OUTPUT_MULTIPLE * sizeof(float) * ATSC_DATA_SEGMENT_LENGTH));
@@ -154,16 +154,16 @@ work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
             break;
         }
 
-        memcpy(d_host_in,
-               in + d_si_start,
-               OUTPUT_MULTIPLE * sizeof(float) * input_mem_items);
+        // memcpy(d_host_in,
+        //        in + d_si_start,
+        //        OUTPUT_MULTIPLE * sizeof(float) * input_mem_items);
 
-        checkCudaErrors(cudaMemcpyAsync(d_dev_in,
-                                        d_host_in,
-                                        OUTPUT_MULTIPLE * sizeof(float) * input_mem_items,
-                                        cudaMemcpyHostToDevice,
-                                        d_stream));
-        cudaStreamSynchronize(d_stream);
+        // checkCudaErrors(cudaMemcpyAsync(d_dev_in,
+        //                                 d_host_in,
+        //                                 OUTPUT_MULTIPLE * sizeof(float) * input_mem_items,
+        //                                 cudaMemcpyHostToDevice,
+        //                                 d_stream));
+        // cudaStreamSynchronize(d_stream);
         // Launch 832 threads to do interpolation
         // The kernel will do 8 tap dot products, so total threads / 8
 
@@ -183,7 +183,7 @@ work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
 
 
         for (int oo = 0; oo < OUTPUT_MULTIPLE; oo++) {
-            exec_atsc_sync_and_integrate(d_dev_in,
+            exec_atsc_sync_and_integrate(in + d_si_start, //d_dev_in,
                                          d_dev_out + oo * ATSC_DATA_SEGMENT_LENGTH,
                                          d_dev_taps,
                                          d_dev_integrator_accum,
