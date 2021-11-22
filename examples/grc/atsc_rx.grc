@@ -1,0 +1,329 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: atsc_rx
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: run
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ATSC Receiver
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: atsc_sym_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 4.5e6 / 286 * 684
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 12.0]
+    rotation: 0
+    state: true
+- name: oversampled_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: atsc_sym_rate * sps
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 12.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: sps
+  id: variable
+  parameters:
+    comment: ''
+    value: '1.1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [320, 12.0]
+    rotation: 0
+    state: true
+- name: analog_agc_0
+  id: analog_agc
+  parameters:
+    T: float
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    gain: '1.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: 1e-4
+    reference: '1.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1016, 116.0]
+    rotation: 0
+    state: true
+- name: atsc_deinterleaver_0
+  id: atsc_deinterleaver
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 240.0]
+    rotation: 180
+    state: true
+- name: atsc_derandomizer_0
+  id: atsc_derandomizer
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [792, 336.0]
+    rotation: 0
+    state: true
+- name: atsc_equalizer_0
+  id: atsc_equalizer
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [992, 240.0]
+    rotation: 180
+    state: true
+- name: atsc_fpll_0
+  id: atsc_fpll
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: oversampled_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 132.0]
+    rotation: 0
+    state: true
+- name: atsc_fs_checker_0
+  id: atsc_fs_checker
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1200, 240.0]
+    rotation: 180
+    state: true
+- name: atsc_rs_decoder_0
+  id: atsc_rs_decoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [496, 336.0]
+    rotation: 0
+    state: true
+- name: atsc_sync_0
+  id: atsc_sync
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: oversampled_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1192, 132.0]
+    rotation: 0
+    state: true
+- name: atsc_viterbi_decoder_0
+  id: atsc_viterbi_decoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 240.0]
+    rotation: 180
+    state: true
+- name: fileio_file_sink_0
+  id: fileio_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    domain: cpu
+    filename: /tmp/mpeg.live.ts
+    itemsize: gr.sizeof_char*188
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1064, 324.0]
+    rotation: 0
+    state: true
+- name: fileio_file_source_0
+  id: fileio_file_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    filename: /data/data/capt_20msps_539mhz._2xsymrate.sc16
+    itemsize: 2*gr.sizeof_short
+    len: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    repeat: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 180.0]
+    rotation: 0
+    state: true
+- name: filter_dc_blocker_0
+  id: filter_dc_blocker
+  parameters:
+    D: '4096'
+    T: float
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    long_form: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 124.0]
+    rotation: 0
+    state: true
+- name: streamops_interleaved_short_to_complex_0
+  id: streamops_interleaved_short_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale_factor: '32768.0'
+    swap: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [320, 124.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_agc_0, '0', atsc_sync_0, '0']
+- [atsc_deinterleaver_0, '0', atsc_rs_decoder_0, '0']
+- [atsc_deinterleaver_0, '1', atsc_rs_decoder_0, '1']
+- [atsc_derandomizer_0, '0', fileio_file_sink_0, '0']
+- [atsc_equalizer_0, '0', atsc_viterbi_decoder_0, '0']
+- [atsc_equalizer_0, '1', atsc_viterbi_decoder_0, '1']
+- [atsc_fpll_0, '0', filter_dc_blocker_0, '0']
+- [atsc_fs_checker_0, '0', atsc_equalizer_0, '0']
+- [atsc_fs_checker_0, '1', atsc_equalizer_0, '1']
+- [atsc_rs_decoder_0, '0', atsc_derandomizer_0, '0']
+- [atsc_rs_decoder_0, '1', atsc_derandomizer_0, '1']
+- [atsc_sync_0, '0', atsc_fs_checker_0, '0']
+- [atsc_viterbi_decoder_0, '0', atsc_deinterleaver_0, '0']
+- [atsc_viterbi_decoder_0, '1', atsc_deinterleaver_0, '1']
+- [fileio_file_source_0, '0', streamops_interleaved_short_to_complex_0, '0']
+- [filter_dc_blocker_0, '0', analog_agc_0, '0']
+- [streamops_interleaved_short_to_complex_0, '0', atsc_fpll_0, '0']
+
+metadata:
+  file_format: 1
