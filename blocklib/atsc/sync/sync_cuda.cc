@@ -1,4 +1,5 @@
 #include "sync_cuda.hh"
+#include "sync_cuda_gen.hh"
 
 #include <gnuradio/helper_cuda.h>
 
@@ -22,14 +23,8 @@ static const int MIN_SEG_LOCK_CORRELATION_VALUE = 5;
 static const signed char SSI_MIN = -16;
 static const signed char SSI_MAX = 15;
 
-
-sync::sptr sync::make_cuda(const block_args& args)
-{
-    return std::make_shared<sync_cuda>(args);
-}
-
 sync_cuda::sync_cuda(const block_args& args)
-    : sync(args), d_rx_clock_to_symbol_freq(args.rate / ATSC_SYMBOL_RATE), d_si(0)
+    : block("sync"), sync(args), d_rx_clock_to_symbol_freq(args.rate / ATSC_SYMBOL_RATE), d_si(0)
 {
 
     // checkCudaErrors(cudaMalloc(
@@ -108,8 +103,8 @@ void sync_cuda::reset()
 work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
                                    std::vector<block_work_output>& work_output)
 {
-    auto in = static_cast<const float*>(work_input[0].items());
-    auto out = static_cast<float*>(work_output[0].items());
+    auto in = work_input[0].items<float>();
+    auto out = work_output[0].items<float>();
     auto noutput_items = work_output[0].n_items;
     auto ninput_items = work_input[0].n_items;
 

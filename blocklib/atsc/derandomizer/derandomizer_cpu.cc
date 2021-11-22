@@ -1,12 +1,11 @@
 #include "derandomizer_cpu.hh"
+#include "derandomizer_cpu_gen.hh"
 #include "gnuradio/atsc/consts.hh"
 
 namespace gr {
 namespace atsc {
 
-derandomizer::sptr derandomizer::make_cpu(const block_args& args) { return std::make_shared<derandomizer_cpu>(args); }
-
-derandomizer_cpu::derandomizer_cpu(const block_args& args) : derandomizer(args)
+derandomizer_cpu::derandomizer_cpu(const block_args& args) : sync_block("derandomizer"), derandomizer(args)
 {
 
     d_rand.reset();
@@ -15,9 +14,9 @@ derandomizer_cpu::derandomizer_cpu(const block_args& args) : derandomizer(args)
 work_return_code_t derandomizer_cpu::work(std::vector<block_work_input>& work_input,
                                   std::vector<block_work_output>& work_output)
 {
-    auto in = static_cast<const uint8_t*>(work_input[0].items());
-    auto out = static_cast<uint8_t*>(work_output[0].items());
-    auto plin = static_cast<const plinfo*>(work_input[1].items());
+    auto in = work_input[0].items<uint8_t>();
+    auto out = work_output[0].items<uint8_t>();
+    auto plin = work_input[1].items<plinfo>();
     auto noutput_items = work_output[0].n_items;
 
     for (int i = 0; i < noutput_items; i++) {

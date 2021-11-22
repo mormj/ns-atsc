@@ -1,4 +1,5 @@
 #include "fs_checker_cpu.hh"
+#include "fs_checker_cpu_gen.hh"
 
 #include "pnXXX.hh"
 #include "types.hh"
@@ -14,12 +15,7 @@ static const int PN63_ERROR_LIMIT = 5;
 namespace gr {
 namespace atsc {
 
-fs_checker::sptr fs_checker::make_cpu(const block_args& args)
-{
-    return std::make_shared<fs_checker_cpu>(args);
-}
-
-fs_checker_cpu::fs_checker_cpu(const block_args& args) : fs_checker(args)
+fs_checker_cpu::fs_checker_cpu(const block_args& args) : block("fs_checker"), fs_checker(args)
 {
     reset();
 }
@@ -37,9 +33,9 @@ void fs_checker_cpu::reset()
 work_return_code_t fs_checker_cpu::work(std::vector<block_work_input>& work_input,
                                              std::vector<block_work_output>& work_output)
 {
-    auto in = static_cast<const float*>(work_input[0].items());
-    auto out = static_cast<float*>(work_output[0].items());
-    auto plout = static_cast<plinfo*>(work_output[1].items());
+    auto in = work_input[0].items<float>();
+    auto out = work_output[0].items<float>();
+    auto plout = work_output[1].items<plinfo>();
     auto noutput_items = work_output[0].n_items;
     auto ninput_items = work_input[0].n_items;
 

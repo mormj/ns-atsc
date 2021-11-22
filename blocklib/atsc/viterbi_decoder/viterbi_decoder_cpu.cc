@@ -1,13 +1,12 @@
 #include "viterbi_decoder_cpu.hh"
+#include "viterbi_decoder_cpu_gen.hh"
 
 #include <gnuradio/atsc/plinfo.hh>
 
 namespace gr {
 namespace atsc {
 
-viterbi_decoder::sptr viterbi_decoder::make_cpu(const block_args& args) { return std::make_shared<viterbi_decoder_cpu>(args); }
-
-viterbi_decoder_cpu::viterbi_decoder_cpu(const block_args& args) : viterbi_decoder(args)
+viterbi_decoder_cpu::viterbi_decoder_cpu(const block_args& args) : sync_block("viterbi_decoder"), viterbi_decoder(args)
 {
     set_output_multiple(NCODERS);  // TODO - how to handle
 
@@ -49,10 +48,10 @@ std::vector<float> viterbi_decoder_cpu::decoder_metrics() const
 work_return_code_t viterbi_decoder_cpu::work(std::vector<block_work_input>& work_input,
                                   std::vector<block_work_output>& work_output)
 {
-   auto in = static_cast<const float*>(work_input[0].items());
-    auto out = static_cast<uint8_t*>(work_output[0].items());
-    auto plin = static_cast<const plinfo*>(work_input[1].items());
-    auto plout = static_cast<plinfo*>(work_output[1].items());
+   auto in = work_input[0].items<float>();
+    auto out = work_output[0].items<uint8_t>();
+    auto plin = work_input[1].items<plinfo>();
+    auto plout = work_output[1].items<plinfo>();
 
     auto noutput_items = work_output[0].n_items;
     // The way the fs_checker works ensures we start getting packets

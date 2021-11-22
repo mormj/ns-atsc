@@ -1,4 +1,5 @@
 #include "equalizer_cpu.hh"
+#include "equalizer_cpu_gen.hh"
 
 #include "pnXXX.hh"
 #include "syminfo.hh"
@@ -9,8 +10,6 @@
 
 namespace gr {
 namespace atsc {
-
-equalizer::sptr equalizer::make_cpu(const block_args& args) { return std::make_shared<equalizer_cpu>(args); }
 
 static float bin_map(int bit) { return bit ? +5 : -5; }
 
@@ -36,7 +35,7 @@ static void init_field_sync_common(float* p, int mask)
         p[i++] = bin_map(pn63[j]);
 }
 
-equalizer_cpu::equalizer_cpu(const block_args& args) : equalizer(args)
+equalizer_cpu::equalizer_cpu(const block_args& args) :  block("equalizer"), equalizer(args)
 {
     init_field_sync_common(training_sequence1, 0);
     init_field_sync_common(training_sequence2, 1);
@@ -126,10 +125,10 @@ void equalizer_cpu::adaptN(const float* input_samples,
 work_return_code_t equalizer_cpu::work(std::vector<block_work_input>& work_input,
                                   std::vector<block_work_output>& work_output)
 {
-    auto in = static_cast<const float*>(work_input[0].items());
-    auto out = static_cast<float*>(work_output[0].items());
-    auto plin = static_cast<const plinfo*>(work_input[1].items());
-    auto plout = static_cast<plinfo*>(work_output[1].items());
+    auto in = work_input[0].items<float>();
+    auto out = work_output[0].items<float>();
+    auto plin = work_input[1].items<plinfo>();
+    auto plout = work_output[1].items<plinfo>();
 
     auto noutput_items = work_output[0].n_items;
     auto ninput_items = work_input[0].n_items;

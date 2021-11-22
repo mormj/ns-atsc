@@ -1,10 +1,7 @@
 module: atsc
 block: derandomizer
 label: ATSC Derandomizer
-
-properties:
--   id: blocktype
-    value: sync
+blocktype: sync_block
 
 parameters:
 
@@ -13,9 +10,9 @@ ports:
     id: in
     direction: input
     type: uint8_t
-    dims: '{188}'
+    dims: 188
 
--   domain: stream
+-   domain: cpu
     id: plinfo
     direction: input
     type: untyped
@@ -25,7 +22,7 @@ ports:
     id: out
     direction: output
     type: uint8_t
-    dims: '{188}'
+    dims: 188
 
 implementations:
 -   id: cpu

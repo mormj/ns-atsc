@@ -1,4 +1,5 @@
 #include "sync_cpu.hh"
+#include "sync_cpu_gen.hh"
 
 namespace gr {
 namespace atsc {
@@ -11,10 +12,7 @@ static const int MIN_SEG_LOCK_CORRELATION_VALUE = 5;
 static const signed char SSI_MIN = -16;
 static const signed char SSI_MAX = 15;
 
-
-sync::sptr sync::make_cpu(const block_args& args) { return std::make_shared<sync_cpu>(args); }
-
-sync_cpu::sync_cpu(const block_args& args) : sync(args),
+sync_cpu::sync_cpu(const block_args& args) : block("sync"), sync(args),
       d_rx_clock_to_symbol_freq(args.rate / ATSC_SYMBOL_RATE),
       d_si(0)
 {
@@ -49,8 +47,8 @@ void sync_cpu::reset()
 work_return_code_t sync_cpu::work(std::vector<block_work_input>& work_input,
                                   std::vector<block_work_output>& work_output)
 {
-    auto in = static_cast<const float*>(work_input[0].items());
-    auto out = static_cast<float*>(work_output[0].items());
+    auto in = work_input[0].items<float>();
+    auto out = work_output[0].items<float>();
     auto noutput_items = work_output[0].n_items;
     auto ninput_items = work_input[0].n_items;
 

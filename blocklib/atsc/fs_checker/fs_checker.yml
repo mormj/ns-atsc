@@ -1,10 +1,7 @@
 module: atsc
 block: fs_checker
 label: ATSC FS Checker
-
-properties:
--   id: blocktype
-    value: general
+blocktype: block
 
 parameters:
  
@@ -13,15 +10,15 @@ ports:
     id: in
     direction: input
     type: float
-    dims: '{832}'
+    dims: 832
 
 -   domain: stream
     id: out
     direction: output
     type: float
-    dims: '{832}'
+    dims: 832
 
--   domain: stream
+-   domain: cpu
     id: plinfo
     direction: output
     type: untyped

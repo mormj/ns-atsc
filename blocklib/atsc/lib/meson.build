@@ -1,6 +1,6 @@
 incdir = include_directories(['../include/gnuradio/atsc','../include'])
 
-atsc_deps += [newsched_runtime_dep, newsched_blocklib_filter_dep, newsched_blocklib_math_dep, volk_dep, fmt_dep, pmt_dep]
+atsc_deps += [newsched_runtime_dep, newsched_blocklib_filter_dep, newsched_blocklib_math_dep, volk_dep, fmt_dep]
 
 atsc_sources += [
     'plinfo.cc',
@@ -10,7 +10,7 @@ atsc_sources += [
 
 
 # This is ugly, and there HAS to be a better way to bring in dependencies
-link_args = ['-lnewsched-pmt','-lnewsched-runtime','-lnewsched-blocklib-filter','-lnewsched-blocklib-math','-lnewsched-blocklib-fec']
+link_args = ['-lnewsched-runtime','-lnewsched-blocklib-filter','-lnewsched-blocklib-math','-lnewsched-blocklib-fec']
 block_cpp_args = ['-DHAVE_CPU']
 if USE_CUDA
      block_cpp_args += '-DHAVE_CUDA'

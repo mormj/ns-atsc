@@ -1,10 +1,7 @@
 module: atsc
 block: sync
 label: ATSC Sync
-
-properties:
--   id: blocktype
-    value: general
+blocktype: block
 
 parameters:
 -   id: rate
@@ -22,7 +19,7 @@ ports:
     id: out
     direction: output
     type: float
-    dims: '{832}'
+    dims: 832
 
 implementations:
 -   id: cpu

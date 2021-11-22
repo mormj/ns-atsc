@@ -1,10 +1,7 @@
 module: atsc
 block: fpll
 label: ATSC FPLL
-
-properties:
--   id: blocktype
-    value: sync
+blocktype: sync_block
 
 parameters:
 -   id: rate

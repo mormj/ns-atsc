@@ -1,11 +1,10 @@
 #include "fpll_cpu.hh"
+#include "fpll_cpu_gen.hh"
 
 namespace gr {
 namespace atsc {
 
-fpll::sptr fpll::make_cpu(const block_args& args) { return std::make_shared<fpll_cpu>(args); }
-
-fpll_cpu::fpll_cpu(const block_args& args) : fpll(args)
+fpll_cpu::fpll_cpu(const block_args& args) : sync_block("fpll"), fpll(args)
 {
     d_afc.set_taps(1.0 - exp(-1.0 / args.rate / 5e-6));
     d_nco.set_freq((-3e6 + 0.309e6) / args.rate * 2 * GR_M_PI);
@@ -18,8 +17,8 @@ work_return_code_t fpll_cpu::work(std::vector<block_work_input>& work_input,
     constexpr float alpha = 0.01;
     constexpr float beta = alpha * alpha / 4.0;
 
-    auto in = static_cast<const gr_complex*>(work_input[0].items());
-    auto out = static_cast<float*>(work_output[0].items());
+    auto in = work_input[0].items<gr_complex>();
+    auto out = work_output[0].items<float>();
     auto noutput_items = work_output[0].n_items;
 
     float a_cos, a_sin;

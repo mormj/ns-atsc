@@ -1,4 +1,5 @@
 #include "rs_decoder_cpu.hh"
+#include "rs_decoder_cpu_gen.hh"
 #include "types.hh"
 #include <gnuradio/atsc/consts.hh>
 
@@ -15,9 +16,7 @@ static const int N = (1 << rs_init_symsize) - 1; // 255
 
 static const int amount_of_pad = N - ATSC_MPEG_RS_ENCODED_LENGTH; // 48
 
-rs_decoder::sptr rs_decoder::make_cpu(const block_args& args) { return std::make_shared<rs_decoder_cpu>(args); }
-
-rs_decoder_cpu::rs_decoder_cpu(const block_args& args) : rs_decoder(args)
+rs_decoder_cpu::rs_decoder_cpu(const block_args& args) : sync_block("rs_decoder"), rs_decoder(args)
 {
     d_rs = init_rs_char(
         rs_init_symsize, rs_init_gfpoly, rs_init_fcr, rs_init_prim, rs_init_nroots);
@@ -65,10 +64,10 @@ int rs_decoder_cpu::num_packets() const { return d_total_packets; }
 work_return_code_t rs_decoder_cpu::work(std::vector<block_work_input>& work_input,
                                   std::vector<block_work_output>& work_output)
 {
-    auto in = static_cast<const uint8_t*>(work_input[0].items());
-    auto out = static_cast<uint8_t*>(work_output[0].items());
-    auto plin = static_cast<const plinfo*>(work_input[1].items());
-    auto plout = static_cast<plinfo*>(work_output[1].items());
+    auto in = work_input[0].items<uint8_t>();
+    auto out = work_output[0].items<uint8_t>();
+    auto plin = work_input[1].items<plinfo>();
+    auto plout = work_output[1].items<plinfo>();
     auto noutput_items = work_output[0].n_items;
 
     std::vector<tag_t> tags;

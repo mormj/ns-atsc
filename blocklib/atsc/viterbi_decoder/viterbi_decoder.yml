@@ -1,10 +1,7 @@
 module: atsc
 block: viterbi_decoder
 label: ATSC Viterbi Decoder
-
-properties:
--   id: blocktype
-    value: sync
+blocktype: sync_block
 
 parameters:
 
@@ -13,9 +10,9 @@ ports:
     id: in
     direction: input
     type: float
-    dims: '{832}'
+    dims: 832
 
--   domain: stream
+-   domain: cpu
     id: plinfo
     direction: input
     type: untyped
@@ -25,9 +22,9 @@ ports:
     id: out
     direction: output
     type: uint8_t
-    dims: '{207}'
+    dims: 207
 
--   domain: stream
+-   domain: cpu
     id: plinfo
     direction: output
     type: untyped

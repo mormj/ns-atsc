@@ -27,8 +27,11 @@ pybind11_dep = dependency('pybind11', required : get_option('enable_python'))
 threads_dep = dependency('threads')
 gtest_dep = dependency('gtest', main : true, version : '>=1.10', required : get_option('enable_testing'))
 USE_CUDA = cuda_available and get_option('enable_cuda')
+IMPLEMENT_CUDA = cuda_available and get_option('enable_cuda')
+IMPLEMENT_CPU = true
 cuda_dep = dependency('cuda', version : '>=10.1', required : USE_CUDA , modules : ['cufft'])
 cusp_dep = dependency('cusp', required : USE_CUDA)
+
 
 prefix = get_option('prefix')
 # Escape spaces
@@ -36,9 +39,12 @@ prefix_parts = prefix.split(' ')
 prefix = '\ '.join(prefix_parts)
 share_dir = join_paths(prefix,'share')
 
+SCRIPTS_DIR = join_paths(share_dir, 'utils','blockbuilder','scripts' )
+run_command('python3', join_paths(SCRIPTS_DIR,'gen_meson.py'), 
+  join_paths(meson.project_source_root(),'blocklib'), check: true)
+
 # newsched_dep = dependency('newsched', method: 'cmake')
 # TODO - do this with subcomponents
-pmt_dep = dependency('newsched-pmt')
 newsched_runtime_dep = dependency('newsched-runtime')
 newsched_blocklib_filter_dep = dependency('newsched-filter')
 newsched_blocklib_math_dep = dependency('newsched-math')
@@ -51,4 +57,4 @@ prefix_parts = prefix.split(' ')
 prefix = '\ '.join(prefix_parts)
 share_dir = join_paths(prefix,'share')
 
-subdir('blocklib')
+subdir('blocklib/atsc')
