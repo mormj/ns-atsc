@@ -7,6 +7,7 @@ subdir('include/gnuradio/atsc')
 
 atsc_sources = []
 atsc_cu_sources = []
+atsc_pure_python_sources = []
 atsc_pybind_sources = []
 atsc_pybind_names = []
 atsc_deps = []

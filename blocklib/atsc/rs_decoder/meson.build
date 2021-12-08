@@ -4,9 +4,13 @@
 # this file alone
 srcs = []
 
+
+
+
 if IMPLEMENT_CPU
     srcs += files(['rs_decoder_cpu.cc'])
 endif
+
 gen_srcs = custom_target('gen_rs_decoder_srcs',
                         input : ['rs_decoder.yml'],
                         output : ['rs_decoder.cc', 'rs_decoder.hh', 'rs_decoder_pybind.cc', 
@@ -35,7 +39,9 @@ gen_impls = custom_target('gen_rs_decoder_impl',
 atsc_deps += declare_dependency(sources : [gen_srcs[1]] ) 
 atsc_sources += [srcs, gen_srcs[0], gen_impls]
 
-if get_option('enable_python')                           
+if get_option('enable_python') 
+    
+
     atsc_pybind_sources += gen_srcs[2]
     atsc_pybind_names += 'rs_decoder'
 endif

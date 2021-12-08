@@ -61,14 +61,14 @@ int rs_decoder_cpu::num_bad_packets() const { return d_bad_packet_count; }
 int rs_decoder_cpu::num_packets() const { return d_total_packets; }
 
 
-work_return_code_t rs_decoder_cpu::work(std::vector<block_work_input>& work_input,
-                                  std::vector<block_work_output>& work_output)
+work_return_code_t rs_decoder_cpu::work(std::vector<block_work_input_sptr>& work_input,
+                                  std::vector<block_work_output_sptr>& work_output)
 {
-    auto in = work_input[0].items<uint8_t>();
-    auto out = work_output[0].items<uint8_t>();
-    auto plin = work_input[1].items<plinfo>();
-    auto plout = work_output[1].items<plinfo>();
-    auto noutput_items = work_output[0].n_items;
+    auto in = work_input[0]->items<uint8_t>();
+    auto out = work_output[0]->items<uint8_t>();
+    auto plin = work_input[1]->items<plinfo>();
+    auto plout = work_output[1]->items<plinfo>();
+    auto noutput_items = work_output[0]->n_items;
 
     std::vector<tag_t> tags;
 

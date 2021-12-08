@@ -67,15 +67,15 @@ void viterbi_decoder_cuda::reset()
 
 }
 
-work_return_code_t viterbi_decoder_cuda::work(std::vector<block_work_input>& work_input,
-                                              std::vector<block_work_output>& work_output)
+work_return_code_t viterbi_decoder_cuda::work(std::vector<block_work_input_sptr>& work_input,
+                                              std::vector<block_work_output_sptr>& work_output)
 {
-    auto in = work_input[0].items<float>();
-    auto out = work_output[0].items<uint8_t>();
-    auto plin = work_input[1].items<plinfo>();
-    auto plout = work_output[1].items<plinfo>();
+    auto in = work_input[0]->items<float>();
+    auto out = work_output[0]->items<uint8_t>();
+    auto plin = work_input[1]->items<plinfo>();
+    auto plout = work_output[1]->items<plinfo>();
 
-    auto noutput_items = work_output[0].n_items;
+    auto noutput_items = work_output[0]->n_items;
     // The way the fs_checker works ensures we start getting packets
     // starting with a field sync, and our input multiple is set to
     // 12, so we should always get a mod 12 numbered first packet

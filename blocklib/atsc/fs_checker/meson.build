@@ -4,9 +4,13 @@
 # this file alone
 srcs = []
 
+
+
+
 if IMPLEMENT_CPU
     srcs += files(['fs_checker_cpu.cc'])
 endif
+
 gen_srcs = custom_target('gen_fs_checker_srcs',
                         input : ['fs_checker.yml'],
                         output : ['fs_checker.cc', 'fs_checker.hh', 'fs_checker_pybind.cc', 
@@ -35,7 +39,9 @@ gen_impls = custom_target('gen_fs_checker_impl',
 atsc_deps += declare_dependency(sources : [gen_srcs[1]] ) 
 atsc_sources += [srcs, gen_srcs[0], gen_impls]
 
-if get_option('enable_python')                           
+if get_option('enable_python') 
+    
+
     atsc_pybind_sources += gen_srcs[2]
     atsc_pybind_names += 'fs_checker'
 endif

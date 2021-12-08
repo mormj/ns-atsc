@@ -11,13 +11,13 @@ derandomizer_cpu::derandomizer_cpu(const block_args& args) : sync_block("derando
     d_rand.reset();
 }
 
-work_return_code_t derandomizer_cpu::work(std::vector<block_work_input>& work_input,
-                                  std::vector<block_work_output>& work_output)
+work_return_code_t derandomizer_cpu::work(std::vector<block_work_input_sptr>& work_input,
+                                  std::vector<block_work_output_sptr>& work_output)
 {
-    auto in = work_input[0].items<uint8_t>();
-    auto out = work_output[0].items<uint8_t>();
-    auto plin = work_input[1].items<plinfo>();
-    auto noutput_items = work_output[0].n_items;
+    auto in = work_input[0]->items<uint8_t>();
+    auto out = work_output[0]->items<uint8_t>();
+    auto plin = work_input[1]->items<plinfo>();
+    auto noutput_items = work_output[0]->n_items;
 
     for (int i = 0; i < noutput_items; i++) {
         assert(plin[i].regular_seg_p());

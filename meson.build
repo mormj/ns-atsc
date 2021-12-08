@@ -19,7 +19,7 @@ yaml_dep = dependency('yaml-cpp', version : '>=0.6')
 fmt_dep = dependency('fmt', method: 'cmake', modules: ['fmt::fmt'])
 spdlog_dep = dependency('spdlog', method: 'cmake', modules : ['spdlog::spdlog'])
 python3_dep = dependency('python3', required : get_option('enable_python'))
-
+python3_embed_dep = dependency('python3-embed', required : get_option('enable_python'))
 # Import python3 meson module which is used to find the Python dependencies.
 py3_inst = import('python').find_installation('python3')
 
@@ -32,6 +32,7 @@ IMPLEMENT_CPU = true
 cuda_dep = dependency('cuda', version : '>=10.1', required : USE_CUDA , modules : ['cufft'])
 cusp_dep = dependency('cusp', required : USE_CUDA)
 
+pmtf_dep = dependency('pmtf', version : '>= 0.0.2')
 
 prefix = get_option('prefix')
 # Escape spaces

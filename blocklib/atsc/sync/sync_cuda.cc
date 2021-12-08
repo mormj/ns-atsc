@@ -100,13 +100,13 @@ void sync_cuda::reset()
 }
 
 
-work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
-                                   std::vector<block_work_output>& work_output)
+work_return_code_t sync_cuda::work(std::vector<block_work_input_sptr>& work_input,
+                                   std::vector<block_work_output_sptr>& work_output)
 {
-    auto in = work_input[0].items<float>();
-    auto out = work_output[0].items<float>();
-    auto noutput_items = work_output[0].n_items;
-    auto ninput_items = work_input[0].n_items;
+    auto in = work_input[0]->items<float>();
+    auto out = work_output[0]->items<float>();
+    auto noutput_items = work_output[0]->n_items;
+    auto ninput_items = work_input[0]->n_items;
 
 
     // Because this is a general block, we must do some forecasting
@@ -117,7 +117,7 @@ work_return_code_t sync_cuda::work(std::vector<block_work_input>& work_input,
         // consume_each(0,work_input);
         return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
     }
-    assert(work_output[0].n_items % OUTPUT_MULTIPLE == 0);
+    assert(work_output[0]->n_items % OUTPUT_MULTIPLE == 0);
 
     // int input_mem_items = ((int)(ATSC_DATA_SEGMENT_LENGTH * d_w) + 1);
     // amount actually consumed

@@ -44,13 +44,13 @@ void sync_cpu::reset()
 }
 
 
-work_return_code_t sync_cpu::work(std::vector<block_work_input>& work_input,
-                                  std::vector<block_work_output>& work_output)
+work_return_code_t sync_cpu::work(std::vector<block_work_input_sptr>& work_input,
+                                  std::vector<block_work_output_sptr>& work_output)
 {
-    auto in = work_input[0].items<float>();
-    auto out = work_output[0].items<float>();
-    auto noutput_items = work_output[0].n_items;
-    auto ninput_items = work_input[0].n_items;
+    auto in = work_input[0]->items<float>();
+    auto out = work_output[0]->items<float>();
+    auto noutput_items = work_output[0]->n_items;
+    auto ninput_items = work_input[0]->n_items;
 
     // amount actually consumed
     d_si = 0;
@@ -59,7 +59,7 @@ work_return_code_t sync_cpu::work(std::vector<block_work_input>& work_input,
     auto min_items = static_cast<int>(noutput_items * d_rx_clock_to_symbol_freq *
                                       ATSC_DATA_SEGMENT_LENGTH) +
                      1500 - 1;
-    if (work_input[0].n_items < min_items) {
+    if (work_input[0]->n_items < min_items) {
         consume_each(0,work_input);
         return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
     }
@@ -163,8 +163,8 @@ work_return_code_t sync_cpu::work(std::vector<block_work_input>& work_input,
         }
     }
 
-    work_input[0].n_consumed = d_si;
-    work_output[0].n_produced = d_output_produced;
+    work_input[0]->consume(d_si);
+    work_output[0]->produce(d_output_produced);
     return work_return_code_t::WORK_OK;
 }
 

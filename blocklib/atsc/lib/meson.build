@@ -1,6 +1,6 @@
 incdir = include_directories(['../include/gnuradio/atsc','../include'])
 
-atsc_deps += [newsched_runtime_dep, newsched_blocklib_filter_dep, newsched_blocklib_math_dep, volk_dep, fmt_dep]
+atsc_deps += [newsched_runtime_dep, newsched_blocklib_filter_dep, newsched_blocklib_math_dep, volk_dep, fmt_dep, pmtf_dep, python3_embed_dep]
 
 atsc_sources += [
     'plinfo.cc',

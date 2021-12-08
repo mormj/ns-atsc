@@ -4,13 +4,20 @@
 # this file alone
 srcs = []
 
+
+
+
 if IMPLEMENT_CPU
     srcs += files(['sync_cpu.cc'])
 endif
+
+
+
 if IMPLEMENT_CUDA
     srcs += files(['sync_cuda.cc'])
 atsc_cu_sources += files(['sync.cu'])
 endif
+
 gen_srcs = custom_target('gen_sync_srcs',
                         input : ['sync.yml'],
                         output : ['sync.cc', 'sync.hh', 'sync_pybind.cc', 
@@ -39,7 +46,9 @@ gen_impls = custom_target('gen_sync_impl',
 atsc_deps += declare_dependency(sources : [gen_srcs[1]] ) 
 atsc_sources += [srcs, gen_srcs[0], gen_impls]
 
-if get_option('enable_python')                           
+if get_option('enable_python') 
+    
+
     atsc_pybind_sources += gen_srcs[2]
     atsc_pybind_names += 'sync'
 endif

@@ -11,15 +11,15 @@ fpll_cpu::fpll_cpu(const block_args& args) : sync_block("fpll"), fpll(args)
     d_nco.set_phase(0.0);
 }
 
-work_return_code_t fpll_cpu::work(std::vector<block_work_input>& work_input,
-                                  std::vector<block_work_output>& work_output)
+work_return_code_t fpll_cpu::work(std::vector<block_work_input_sptr>& work_input,
+                                  std::vector<block_work_output_sptr>& work_output)
 {
     constexpr float alpha = 0.01;
     constexpr float beta = alpha * alpha / 4.0;
 
-    auto in = work_input[0].items<gr_complex>();
-    auto out = work_output[0].items<float>();
-    auto noutput_items = work_output[0].n_items;
+    auto in = work_input[0]->items<gr_complex>();
+    auto out = work_output[0]->items<float>();
+    auto noutput_items = work_output[0]->n_items;
 
     float a_cos, a_sin;
     float x;
@@ -50,7 +50,7 @@ work_return_code_t fpll_cpu::work(std::vector<block_work_input>& work_input,
         d_nco.adjust_freq(beta * x);
     }
 
-    work_output[0].n_produced = noutput_items;
+    work_output[0]->produce(noutput_items);
     return work_return_code_t::WORK_OK;
 
 }

@@ -122,16 +122,16 @@ void equalizer_cpu::adaptN(const float* input_samples,
 }
 
 
-work_return_code_t equalizer_cpu::work(std::vector<block_work_input>& work_input,
-                                  std::vector<block_work_output>& work_output)
+work_return_code_t equalizer_cpu::work(std::vector<block_work_input_sptr>& work_input,
+                                  std::vector<block_work_output_sptr>& work_output)
 {
-    auto in = work_input[0].items<float>();
-    auto out = work_output[0].items<float>();
-    auto plin = work_input[1].items<plinfo>();
-    auto plout = work_output[1].items<plinfo>();
+    auto in = work_input[0]->items<float>();
+    auto out = work_output[0]->items<float>();
+    auto plin = work_input[1]->items<plinfo>();
+    auto plout = work_output[1]->items<plinfo>();
 
-    auto noutput_items = work_output[0].n_items;
-    auto ninput_items = work_input[0].n_items;
+    auto noutput_items = work_output[0]->n_items;
+    auto ninput_items = work_input[0]->n_items;
     if (ninput_items < noutput_items) {
         return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
     }

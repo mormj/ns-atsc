@@ -8,6 +8,7 @@ fs = import('fs')
 if fs.exists('bindings/meson.build')
 subdir('bindings')
 endif
+#srcs = files('__init__.py') #+ atsc_pure_python_sources
 srcs = ['__init__.py']
 
 foreach s: srcs

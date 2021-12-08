@@ -30,14 +30,14 @@ void fs_checker_cpu::reset()
     d_segment_num = 0;
 }
 
-work_return_code_t fs_checker_cpu::work(std::vector<block_work_input>& work_input,
-                                             std::vector<block_work_output>& work_output)
+work_return_code_t fs_checker_cpu::work(std::vector<block_work_input_sptr>& work_input,
+                                             std::vector<block_work_output_sptr>& work_output)
 {
-    auto in = work_input[0].items<float>();
-    auto out = work_output[0].items<float>();
-    auto plout = work_output[1].items<plinfo>();
-    auto noutput_items = work_output[0].n_items;
-    auto ninput_items = work_input[0].n_items;
+    auto in = work_input[0]->items<float>();
+    auto out = work_output[0]->items<float>();
+    auto plout = work_output[1]->items<plinfo>();
+    auto noutput_items = work_output[0]->n_items;
+    auto ninput_items = work_input[0]->n_items;
 
     // Need to figure out how to handle this more gracefully
     // The scheduler (currently) has no information about what the block
